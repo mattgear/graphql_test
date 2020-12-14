@@ -21,7 +21,11 @@ const CustomerType = new GraphQLObjectType({
     contacts: {
       type: new GraphQLList(ContactType),
       resolve(parentValue, args) {
-        const query = `SELECT * from "test"."contacts" WHERE customer_id=${parentValue.customer_id}`;
+        const query = {
+          text: `SELECT * from "test"."contacts" WHERE customer_id = $1`,
+          values: [parentValue.customer_id],
+        };
+
         return db.conn
           .many(query)
           .then((data) => {
@@ -53,7 +57,11 @@ const RootQuery = new GraphQLObjectType({
       type: CustomerType,
       args: { id: { type: GraphQLID } },
       resolve(parentValue, args) {
-        const query = `SELECT * FROM "test"."customers" WHERE customer_id=${args.id}`;
+        const query = {
+          text: `SELECT * FROM "test"."customers" WHERE customer_id = $1`,
+          values: [args.id],
+        };
+
         return db.conn
           .one(query)
           .then((data) => {
@@ -64,11 +72,15 @@ const RootQuery = new GraphQLObjectType({
           });
       },
     },
-    contact: {
+    contacts: {
       type: ContactType,
       args: { id: { type: GraphQLID } },
       resolve(parentValue, args) {
-        const query = `SELECT * FROM "test"."contacts" WHERE customer_id=${args.id}`;
+        const query = {
+          text: `SELECT * FROM "test"."contacts" WHERE contact_id = $1`,
+          values: [args.id],
+        };
+
         return db.conn
           .one(query)
           .then((data) => {

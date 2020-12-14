@@ -5,9 +5,8 @@ Using Postgresql, Graphql and Express.
 Database set up found in database.sql.
 
 Get request example structure:
-{
-customer(id: "1") {
-customer_id
+query {
+customer(id:"1"){
 customer_name
 contacts {
 contact_name
@@ -21,7 +20,6 @@ Response:
 {
 "data": {
 "customer": {
-"customer_id": "1",
 "customer_name": "Whale Corp",
 "contacts": [
 {
